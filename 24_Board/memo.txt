@@ -1,0 +1,142 @@
+drop table member cascade constraints ;
+drop sequence m_seq;
+
+create table member(
+	mnum number primary key,
+	id varchar2(20) not null,
+	password varchar2(10) not null,
+	name varchar2(20) not null,
+  	gender varchar2(30) not null,
+  	singer varchar2(30) not null,
+  	song varchar2(30) not null,
+	register date default sysdate
+);
+
+create sequence m_seq
+	increment by 1
+	start with 1 
+	minvalue 1
+	maxvalue 10000
+	nocache;
+
+
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'IU', '1234', '기리보이', '남성', '폴킴', '있잖아');
+
+-- Additional 5 records
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'user1', 'pwd1', '유저1', '여성', '윤하', '별의조각');
+
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'user2', 'pwd2', '유저2', '남성', '데이식스', '예뻤어');
+
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'user3', 'pwd3', '유저3', '여성', '에이핑크', '노노노');
+
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'user4', 'pwd4', '유저4', '남성', '샤이니', '셜록');
+
+INSERT INTO member(mnum, id, password, name, gender, singer, song)
+VALUES (m_seq.NEXTVAL, 'user5', 'pwd5', '유저5', '여성', '아이유', '너랑나');
+
+
+drop table board;
+
+create table board( 
+	num number not null primary key,
+	writer varchar2(10) not null,
+	email varchar2(20),
+	subject varchar2(20) not null,
+	passwd varchar2(12) not null,
+	reg_date date not null,
+	readcount int default 0, -- 조회수
+	ref number not null, -- 답글 번호
+	re_step number not null,
+	re_level number not null, -- 원글:0, 답글:1, 답답:2, 답답답:3 
+	content varchar2(20) not null,
+	ip varchar2(15) not null
+);
+
+drop sequence board_seq;
+create sequence board_seq
+  increment by 1
+  start with 1
+  minvalue 1
+  maxvalue 10000
+  nocache;
+  
+	
+-- 각 칼럼에 맞게 데이터 삽입
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a1', 'a1@test.com', '제목1', '1234', '2023-01-01', 1, 1, 0, 0, '내용1', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a2', 'a2@test.com', '제목2', '1234', '2023-01-01', 0, 2, 0, 0, '내용2', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a21', 'a21@test.com', '제목21', '1234', '2023-01-01', 0, 2, 4, 1, '내용21', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a22', 'a22@test.com', '제목22', '1234', '2023-01-01', 0, 2, 1, 1, '내용22', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a221', 'a221@test.com', '제목221', '1234', '2023-01-01', 0, 2, 3, 2, '내용221', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a222', 'a222@test.com', '제목222', '1234', '2023-01-01', 0, 2, 2, 2, '내용222', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a3', 'a3@test.com', '제목3', '1234', '2023-01-01', 0, 7, 0, 0, '내용3', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a31', 'a31@test.com', '제목31', '1234', '2023-01-01', 0, 7, 6, 1, '내용31', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a311', 'a311@test.com', '제목311', '1234', '2023-01-01', 0, 7, 7, 2, '내용311', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a32', 'a32@test.com', '제목32', '1234', '2023-01-01', 0, 7, 2, 1, '내용32', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a321', 'a321@test.com', '제목321', '1234', '2023-01-01', 0, 7, 5, 2, '내용321', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a322', 'a322@test.com', '제목322', '1234', '2023-01-01', 0, 7, 3, 2, '내용322', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a3221', 'a3221@test.com', '제목3221', '1234', '2023-01-01', 0, 7, 4, 3, '내용3221', '127.0.0.1');
+
+insert into board(num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+values(board_seq.nextval, 'a33', 'a33@test.com', '제목33', '1234', '2023-01-01', 0, 7, 1, 1, '내용33', '127.0.0.1');
+
+commit;
+
+http://localhost:8080/16_BBoard/list.jsp?pageNum=5
+=> http://192.168.0.238:8080/16_BBoard/list.jsp?pageNum=5
+
+
+IPV4 형태로 출력하는 방법
+
+
+rownum(삽입된걸 기억하는 특수 칼럼)
+
+1단계
+select rownum as rank, num, subject, ref, re_step, re_level
+from (select rownum, num, subject, ref, re_step, re_level
+from board);
+
+2단계
+select rownum, num, subject, ref, re_step, re_level
+from (select rownum, num, subject, ref, re_step, re_level
+from board
+order by ref desc, re_step asc);
+
+
+3단계
+select rank, num,subject,ref,re_step,re_level
+from(select as rank, rownum, num, subject, ref, re_step, re_level
+from (select rownum, num, subject, ref, re_step, re_level
+from board
+order by ref desc, re_step asc))
+where rank between 1 and 10;
+

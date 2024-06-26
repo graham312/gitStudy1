@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board.model.Board">
+	<!-- 페이지 설정 -->
+	<select id="getTotalCount" resultType="int" parameterType="hashmap">
+		select count(*) from board
+		<if test="whatColumn == 'all'">
+			where subject like #{keyword} or writer like #{keyword} or num like
+			#{keyword}
+		</if>
+		<if test="whatColumn == 'subject'">
+			where subject like #{keyword}
+		</if>
+		<if test="whatColumn == 'writer'">
+			where writer like #{keyword}
+		</if>
+	</select>
+	
+	<!-- 게시글 전체 조회 -->
+	<select id="getBoardList" resultType="MyBoard" parameterType="hashmap">
+		select num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip
+		from board
+		<if test="whatColumn == 'all'">
+			where subject like #{keyword} or writer like #{keyword} or num like
+			#{keyword}
+		</if>
+		<if test="whatColumn == 'subject'">
+			where subject like #{keyword}
+		</if>
+		<if test="whatColumn == 'writer'">
+			where writer like #{keyword}
+		</if>
+		order by ref desc, re_step asc
+	</select>
+	
+	<!-- 게시글 추가 -->
+    <insert id="insertArticle" parameterType="board.model.BoardBean">
+        INSERT INTO board (num, writer, email, subject, passwd, reg_date, readcount, ref, re_step, re_level, content, ip)
+        VALUES (board_seq.nextval, #{writer}, #{email}, #{subject}, #{passwd}, #{reg_date}, #{readcount}, board_seq.currval, #{re_step, jdbcType=INTEGER}, #{re_level, jdbcType=INTEGER}, #{content}, #{ip})
+    </insert>
+    
+	<insert id="insertBoard">
+	insert into board (num, writer, email,subject,password,reg_date,readcount,ref,re_step,re_level,contents,ip)
+	values(seqboard.nextval,#{writer},#{email},#{subject},#{password},sysdate,#{readcount},#{ref}+1,#{re_step},0,#{contents},#{ip, jdbcType=INTEGER})
+	</insert>
+	<update id="updateRe">
+	update board set re_step = re_step+1 where ref=#{ref} and re_step > #{re_step}
+	</update>
+	<insert id="boardReply">
+	insert into board(num, writer, email,subject,password,reg_date,readcount,ref,re_step,re_level,contents,ip)
+	values(seqboard.nextval,#{writer},#{email},#{subject},#{password},sysdate,0,#{ref},#{re_step, jdbcType=INTEGER},#{re_level, jdbcType=INTEGER},#{contents},#{ip, jdbcType=INTEGER})
+	</insert>
+
+    
+    
+    
+    <!-- 조회수 증가 -->
+    <update id="increaseReadCount">
+        UPDATE board
+        SET readcount = readcount + 1
+        WHERE num = #{num}
+    </update>
+    
+    <!-- board.xml -->
+	<delete id="deleteBoard">
+	    delete from board where num = #{num}
+	</delete>
+	
+	<!-- 게시글 번호 조회 -->
+	<select id="getBoardByNum" resultType="MyBoard">
+		select * from board where num = #{num}
+	</select>
+	
+	<select id="getPassword" resultType="string">
+    SELECT passwd FROM board WHERE num = #{num}
+	</select>
+	
+	<update id="updateBoard" parameterType="board.model.BoardBean">
+	    UPDATE board
+	    SET writer = #{writer},
+	        subject = #{subject},
+	        email = #{email},
+	        content = #{content},
+	        passwd = #{passwd},
+	        reg_date = #{reg_date},
+	        ip = #{ip}
+	    WHERE num = #{num}
+	</update>
+	
+	<delete id="deleterArticle">
+    	delete from board
+    	where num = #{num}
+    </delete>
+	
+    <!-- 답글 작성 시 re_step(글 순서) 증가 -->
+    <update id="updateArticle" parameterType="int">
+    	update board set re_step = re_step + 1
+    	where ref = #{ref} and re_step >  #{re_step}
+    </update>
+    <!-- 답글 작성 re_level-->
+    <insert id="replyArticle" parameterType="int">
+    	insert into board (num, writer, email, subject, passwd, reg_date, ref, re_step, re_level, content, ip)
+		values (board_seq.nextval, #{writer}, #{email}, #{subject}, #{passwd}, #{reg_date}, #{ref}, #{re_step}+1, #{re_level}+1, #{content}, #{ip})
+    </insert>
+	
+</mapper>
